@@ -16,8 +16,7 @@
           steps{
             sh ''' 
                   cd terraform && terraform init -input=false /
-                  cd terraform && terraform validate /
-                  echo \$DO_PATH
+                  echo \$DO_PATH > hello.txt
                '''
           }
         }
