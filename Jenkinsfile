@@ -5,7 +5,6 @@
         }
     }
     environment {
-        DO_PATH = credentials('DO_TOKEN')
         DIGITALOCEAN_TOKEN= credentials('DO_TOKEN')
     }
     triggers {
@@ -15,12 +14,13 @@
         stage('init'){
           when { expression { env.BRANCH_NAME ==~ /dev.*/ || env.BRANCH_NAME ==~ /PR.*/ || env.BRANCH_NAME ==~ /feat.*/ } }
           steps{
-            sh '''
-                  #!/bin/bash -x /
-                  cd terraform && terraform init -input=false /
-                  echo \$DO_PATH > hello.txt /
-                  cat hello.txt
-               '''
+            sh 'cd terraform && terraform init -input=false'    
+          }
+        }
+        stage('init'){
+          when { expression { env.BRANCH_NAME ==~ /dev.*/ || env.BRANCH_NAME ==~ /PR.*/ || env.BRANCH_NAME ==~ /feat.*/ } }
+          steps{
+            sh 'cd terraform && terraform validate'    
           }
         }
 
@@ -35,7 +35,6 @@
             when { expression{ env.BRANCH_NAME ==~ /dev.*/ || env.BRANCH_NAME ==~ /PR.*/ || env.BRANCH_NAME ==~ /feat.*/ } }
             steps {
                 sh 'cd terraform && terraform plan -out=plan -input=false'
-                emailext subject: "Approval manual steps", to: 'monserrat.sedeno@digitalonus.com', body:"Please approve or abort plant promotion using the enclosed link"
                 input(message: "Do you want to apply this plan?", ok: "yes")
             }
         }
