@@ -14,8 +14,11 @@
         stage('init'){
           when { expression { env.BRANCH_NAME ==~ /dev.*/ || env.BRANCH_NAME ==~ /PR.*/ || env.BRANCH_NAME ==~ /feat.*/ } }
           steps{
-            sh 'cd terraform && terraform init -input=false'
-            sh 'cd terraform && terraform validate'
+            sh ''' 
+                  cd terraform && terraform init -input=false /
+                  cd terraform && terraform validate /
+                  echo \$DO_PATH
+               '''
           }
         }
 
