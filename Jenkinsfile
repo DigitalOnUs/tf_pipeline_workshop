@@ -6,6 +6,7 @@
     }
     environment {
         DO_PATH = credentials('DO_TOKEN')
+        DIGITALOCEAN_TOKEN= credentials('DO_TOKEN')
     }
     triggers {
          pollSCM('H/5 * * * *')
